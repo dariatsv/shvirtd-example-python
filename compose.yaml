@@ -1,0 +1,27 @@
+version: '3.8'
+include:
+  - proxy.yaml
+services:
+  db:
+    image: mysql:8
+    restart: always
+    networks:
+      backend:
+        ipv4_address: 172.20.0.10
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/mysql
+
+  web:
+    depends_on: ["db"]
+    build: .
+    restart: always
+    networks:
+      backend:
+        ipv4_address: 172.20.0.5
+    environment:
+      - DB_HOST=172.20.0.10
+      - DB_USER=app
+      - DB_PASSWORD=QwErTy1234
+      - DB_NAME=virtd
